@@ -2010,16 +2010,21 @@ select {
 
 .footer {
   width: 85%;
-  margin-top: 20px;
-  padding: 28px 35px 15px;
+  margin: 0;
+  margin-bottom: 0%;
+  box-sizing: border-box;
+  
+  padding: 12px 30px;
   background: #081525;
   border-top: 1px solid rgba(34, 170, 255, 0.2);
  position: relative;
  left: 230px;
  z-index: 10;
   display: grid;
-  margin-right: 0;
+  margin-right: 150px;
+  flex-shrink:0;
   grid-template-columns: 1fr auto auto;
+
   gap: 35px;
 
   color: #b8c7d9;
