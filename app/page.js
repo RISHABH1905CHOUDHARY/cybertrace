@@ -7,6 +7,8 @@ import RecentActivities from "../components/recentActivities";
 import ComplaintsTrend from "../components/complaintsTrend";
 import FraudTypes from "../components/fraudTypes";
 import PredictionPerformance from "../components/predictionperformance";
+import Footer from "../components/footer";
+
 
 export default function Home() {
   return (
@@ -85,6 +87,7 @@ export default function Home() {
         </section>
 
       </main>
+      <Footer/>
 
     </div>
   );

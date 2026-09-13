@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import {
   LayoutDashboard,
@@ -10,33 +11,41 @@ import {
   Zap,
   Users,
   Info,
+  
 } from "lucide-react";
 
 const menuItems = [
   {
     label: "Dashboard",
     icon: LayoutDashboard,
+    href:"/",
   },
   {
     label: "Predictions",
     icon: Shield,
+    href: "/predictions",
   },
   {
     label: "Alerts",
     icon: Bell,
+    href: "/alerts",
   },
   {
     label: "Complaints",
     icon: FileText,
+    href: "/complaints",
   },
   {
     label: "Analytics",
     icon: BarChart3,
+    href: "/analytics",
   },
   {
     label: "Reports",
     icon: FileBarChart,
+    href: "/reports",
   },
+  
 ];
 
 export default function Sidebar() {
@@ -56,14 +65,14 @@ export default function Sidebar() {
           const Icon = item.icon;
 
           return (
-            <button
+            <Link
               key={item.label}
-              type="button"
+              href={item.href}
               className="sidebar-item"
             >
               <Icon size={20} />
               <span>{item.label}</span>
-            </button>
+            </Link>
           );
         })}
 
