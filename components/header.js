@@ -1,523 +1,524 @@
 "use client";
-import { useState } from "react"; import { useRouter } from "next/navigation"; import Link from "next/link";
-import { Search, Bell, ChevronDown, Shield, X, User, FileText, Settings, Mail, Lock, } from "lucide-react";
-export default function Header() { const router = useRouter();
-// ========================================== // LOGIN STATE // ==========================================
-const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [error, setError] = useState("");
- const USER = { email: "rishabh@gmail.com", password: "123456", };
-// ========================================== // SEARCH STATE // ==========================================
-const [search, setSearch] = useState(""); const [showSearchResults, setShowSearchResults] = useState(false);
-// ========================================== // NOTIFICATION & PROFILE STATE // ==========================================
-const [showNotifications, setShowNotifications] = useState(false); const [showProfile, setShowProfile] = useState(false);
-// ========================================== // LOGIN FUNCTION // ==========================================
-const handleLogin = (e) => { e.preventDefault();
-if (
-  email === USER.email &&
-  password === USER.password
-) {
-  // Save login status
-  localStorage.setItem("loggedIn", "true");
 
-  // Go to dashboard
-  router.push("/");
-} else {
-  setError("Invalid email or password");
-}
-};
-// ========================================== // SEARCH ITEMS // ==========================================
-const searchItems = [ { name: "Dashboard", path: "/", keywords: "dashboard home overview", },
-{
-  name: "Predictions",
-  path: "/predictions",
-  keywords: "predictions prediction risk forecast",
-},
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-{
-  name: "Alerts",
-  path: "/alerts",
-  keywords: "alerts alert security threats warning",
-},
+import {
+  Search,
+  Bell,
+  ChevronDown,
+  Shield,
+  X,
+  User,
+  FileText,
+  Settings,
+  LogOut,
+} from "lucide-react";
 
-{
-  name: "Complaints",
-  path: "/complaints",
-  keywords: "complaints complaint cases",
-},
+export default function Header() {
+  const router = useRouter();
 
-{
-  name: "Analytics",
-  path: "/analytics",
-  keywords: "analytics statistics data",
-},
+  // ==========================================
+  // USER
+  // ==========================================
 
-{
-  name: "Reports",
-  path: "/reports",
-  keywords: "reports report documents",
-},
-];
-// ========================================== // FILTER SEARCH RESULTS // ==========================================
-const filteredItems = searchItems.filter((item) => { const query = search.toLowerCase().trim();
-return (
-  item.name.toLowerCase().includes(query) ||
-  item.keywords.toLowerCase().includes(query)
-);
-});
-// ========================================== // OPEN SEARCH RESULT // ==========================================
-const openSearchResult = (path) => { router.push(path);
-setSearch("");
-setShowSearchResults(false);
-};
-// ========================================== // SEARCH SUBMIT // ==========================================
-const handleSearch = (event) => { event.preventDefault();
-if (filteredItems.length > 0) {
-  openSearchResult(filteredItems[0].path);
-}
-};
-// ========================================== // MAIN UI // ==========================================
-return ( <> {/* ====================================== LOGIN PAGE ====================================== */}
-<div className="login-page">
+ 
+  // ==========================================
+  // SEARCH
+  // ==========================================
 
-    <div className="login-card">
+  const [search, setSearch] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [userName, setUserName] = useState("");
+  useEffect(() => {
+  const savedUser = localStorage.getItem("user");
 
-      <h2>Welcome Back</h2>
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
 
-      <p className="login-description">
-        Login to access your cybercrime intelligence dashboard
-      </p>
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setUserName(user.name);
+  }
+}, []);
+  // ==========================================
+  // NOTIFICATION
+  // ==========================================
 
-      <form onSubmit={handleLogin}>
+  const [showNotifications, setShowNotifications] = useState(false);
 
-        {/* EMAIL */}
+  // ==========================================
+  // PROFILE
+  // ==========================================
 
-        <div className="login-input">
+  const [showProfile, setShowProfile] = useState(false);
 
-          <Mail size={19} />
+  // ==========================================
+  // LOAD USER
+  // ==========================================
 
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setError("");
-            }}
-            required
-          />
+  
+  // ==========================================
+  // SEARCH ITEMS
+  // ==========================================
 
-        </div>
+  const searchItems = [
+    {
+      name: "Dashboard",
+      path: "/",
+      keywords: "dashboard home overview",
+    },
 
-        {/* PASSWORD */}
+    {
+      name: "Predictions",
+      path: "/predictions",
+      keywords: "predictions prediction risk forecast",
+    },
 
-        <div className="login-input">
+    {
+      name: "Alerts",
+      path: "/alerts",
+      keywords: "alerts alert security threats warning",
+    },
 
-          <Lock size={19} />
+    {
+      name: "Complaints",
+      path: "/complaints",
+      keywords: "complaints complaint cases",
+    },
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setError("");
-            }}
-            required
-          />
+    {
+      name: "Analytics",
+      path: "/analytics",
+      keywords: "analytics statistics data",
+    },
 
-        </div>
+    {
+      name: "Reports",
+      path: "/reports",
+      keywords: "reports report documents",
+    },
+  ];
 
-        {/* ERROR */}
+  // ==========================================
+  // FILTER SEARCH
+  // ==========================================
 
-        {error && (
-          <p className="login-error">
-            {error}
-          </p>
-        )}
+  const filteredItems = searchItems.filter((item) => {
+    const query = search.toLowerCase().trim();
 
-        {/* LOGIN BUTTON */}
+    return (
+      item.name.toLowerCase().includes(query) ||
+      item.keywords.toLowerCase().includes(query)
+    );
+  });
 
-        <button
-          type="submit"
-          className="login-button"
-        >
-          Login
-        </button>
+  // ==========================================
+  // OPEN SEARCH RESULT
+  // ==========================================
 
-      </form>
+  const openSearchResult = (path) => {
+    router.push(path);
 
-      <p className="login-security">
-        🔒 Authorized Investigator Access
-      </p>
+    setSearch("");
+    setShowSearchResults(false);
+  };
 
-    </div>
+  // ==========================================
+  // SEARCH
+  // ==========================================
 
-  </div>
+  const handleSearch = (event) => {
+    event.preventDefault();
 
-  {/* ======================================
-      HEADER
-  ====================================== */}
+    if (filteredItems.length > 0) {
+      openSearchResult(filteredItems[0].path);
+    }
+  };
 
-  <header className="header">
+  // ==========================================
+  // LOGOUT
+  // ==========================================
 
-    {/* ====================================
-        LOGO
-    ==================================== */}
+  const handleLogout = () => {
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("user");
 
-    <Link
-      href="/"
-      className="logo-area"
-      aria-label="Go to Dashboard"
-    >
+    // Remove cookie
+    document.cookie =
+      "loggedIn=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
-      <div className="logo-icon">
-        <Shield
-          size={38}
-          strokeWidth={2}
-        />
-      </div>
+    router.push("/login");
+  };
 
-      <div className="logo-text">
+  // ==========================================
+  // RETURN
+  // ==========================================
 
-        <h2>
-          CYBER<span>TRACE</span>
-        </h2>
+  return (
+    <header className="header">
 
-        <p>
-          Predict • Prevent • Protect
-        </p>
+      {/* ======================================
+          LOGO
+      ====================================== */}
 
-      </div>
-
-    </Link>
-
-    {/* ====================================
-        SEARCH
-    ==================================== */}
-
-    <div className="header-search-wrapper">
-
-      <form
-        className="search-container"
-        onSubmit={handleSearch}
+      <Link
+        href="/"
+        className="logo-area"
+        aria-label="Go to Dashboard"
       >
 
-        <Search size={19} />
+        <div className="logo-icon">
+          <Shield
+            size={38}
+            strokeWidth={2}
+          />
+        </div>
 
-        <input
-          type="search"
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setShowSearchResults(true);
-          }}
-          onFocus={() => {
-            if (search) {
+        <div className="logo-text">
+
+          <h2>
+            CYBER<span>TRACE</span>
+          </h2>
+
+          <p>
+            Predict • Prevent • Protect
+          </p>
+
+        </div>
+
+      </Link>
+
+      {/* ======================================
+          SEARCH
+      ====================================== */}
+
+      <div className="header-search-wrapper">
+
+        <form
+          className="search-container"
+          onSubmit={handleSearch}
+        >
+
+          <Search size={19} />
+
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value);
               setShowSearchResults(true);
+            }}
+            onFocus={() => {
+              if (search) {
+                setShowSearchResults(true);
+              }
+            }}
+            placeholder="Search complaints, locations, cases..."
+            aria-label="Search"
+          />
+
+          <kbd>⌘ K</kbd>
+
+        </form>
+
+        {/* SEARCH RESULTS */}
+
+        {showSearchResults && search && (
+
+          <div className="header-search-results">
+
+            {filteredItems.length > 0 ? (
+
+              filteredItems.map((item) => (
+
+                <button
+                  type="button"
+                  className="search-result"
+                  key={item.path}
+                  onClick={() =>
+                    openSearchResult(item.path)
+                  }
+                >
+
+                  <Search size={17} />
+
+                  <div>
+
+                    <strong>
+                      {item.name}
+                    </strong>
+
+                    <small>
+                      {item.keywords}
+                    </small>
+
+                  </div>
+
+                </button>
+
+              ))
+
+            ) : (
+
+              <div className="no-search-result">
+
+                <Search size={18} />
+
+                <span>
+                  No matching page found
+                </span>
+
+              </div>
+
+            )}
+
+          </div>
+
+        )}
+
+      </div>
+
+      {/* ======================================
+          RIGHT SIDE
+      ====================================== */}
+
+      <div className="header-right">
+
+        {/* ====================================
+            NOTIFICATIONS
+        ==================================== */}
+
+        <div className="notification">
+
+          <button
+            type="button"
+            className="notification-button"
+            onClick={() =>
+              setShowNotifications(
+                !showNotifications
+              )
             }
-          }}
-          placeholder="Search complaints, locations, cases..."
-          aria-label="Search"
-        />
+            aria-label="Open notifications"
+          >
 
-        <kbd>⌘ K</kbd>
+            <Bell size={22} />
 
-      </form>
+            <span>
+              1
+            </span>
 
-      {/* SEARCH RESULTS */}
+          </button>
 
-      {showSearchResults && search && (
-        <div className="header-search-results">
+          {/* NOTIFICATION DROPDOWN */}
 
-          {filteredItems.length > 0 ? (
+          {showNotifications && (
 
-            filteredItems.map((item) => (
+            <div className="notification-dropdown">
 
-              <button
-                type="button"
-                className="search-result"
-                key={item.path}
-                onClick={() =>
-                  openSearchResult(item.path)
-                }
-              >
+              <div className="dropdown-title">
 
-                <Search size={17} />
+                <strong>
+                  Notifications
+                </strong>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowNotifications(false)
+                  }
+                  aria-label="Close notifications"
+                >
+
+                  <X size={17} />
+
+                </button>
+
+              </div>
+
+              {/* ALERT 1 */}
+
+              <div className="notification-item">
+
+                <div className="notification-dot critical"></div>
 
                 <div>
 
                   <strong>
-                    {item.name}
+                    High Risk Alert
                   </strong>
 
+                  <p>
+                    Suspicious activity detected in Indore.
+                  </p>
+
                   <small>
-                    {item.keywords}
+                    2 minutes ago
                   </small>
 
                 </div>
 
-              </button>
+              </div>
 
-            ))
+              {/* ALERT 2 */}
 
-          ) : (
+              <div className="notification-item">
 
-            <div className="no-search-result">
+                <div className="notification-dot warning"></div>
 
-              <Search size={18} />
+                <div>
 
-              <span>
-                No matching page found
-              </span>
+                  <strong>
+                    New Prediction
+                  </strong>
+
+                  <p>
+                    New cybercrime prediction is available.
+                  </p>
+
+                  <small>
+                    10 minutes ago
+                  </small>
+
+                </div>
+
+              </div>
+
+              <Link
+                href="/alerts"
+                className="view-all"
+                onClick={() =>
+                  setShowNotifications(false)
+                }
+              >
+                View all alerts →
+              </Link>
 
             </div>
 
           )}
 
         </div>
-      )}
 
-    </div>
+        {/* ====================================
+            PROFILE
+        ==================================== */}
 
-    {/* ====================================
-        RIGHT SIDE
-    ==================================== */}
+        <div className="profile">
 
-    <div className="header-right">
+          <button
+            type="button"
+            className="profile-button"
+            onClick={() =>
+              setShowProfile(!showProfile)
+            }
+          >
 
-      {/* ==================================
-          NOTIFICATIONS
-      ================================== */}
+            {/* AVATAR */}
 
-      <div className="notification">
+            <div className="avatar">
+              <User size={19} />
+            </div>
 
-        <button
-          type="button"
-          className="notification-button"
-          onClick={() =>
-            setShowNotifications(
-              !showNotifications
-            )
-          }
-          aria-label="Open notifications"
-        >
+            {/* USER INFORMATION */}
 
-          <Bell size={22} />
+            <div className="profile-info">
+<strong>
+  {userName || "User"}
+</strong>
+             <small>Investigator</small>
 
-          <span>
-            1
-          </span>
+            </div>
 
-        </button>
+            <ChevronDown
+              size={17}
+              className={
+                showProfile
+                  ? "rotate-arrow"
+                  : ""
+              }
+            />
 
-        {/* NOTIFICATION DROPDOWN */}
+          </button>
 
-        {showNotifications && (
+          {/* PROFILE DROPDOWN */}
 
-          <div className="notification-dropdown">
+          {showProfile && (
 
-            <div className="dropdown-title">
+            <div className="profile-dropdown">
 
-              <strong>
-                Notifications
-              </strong>
+              {/* USER */}
+
+              <div className="profile-dropdown-user">
+
+                <div className="avatar">
+                  <User size={19} />
+                </div>
+
+                <div>
+
+                 <strong>
+  {userName || "User"}
+</strong>
+
+               <small>Investigator</small>
+
+                </div>
+
+              </div>
+
+              {/* REPORTS */}
+
+              <Link href="/reports">
+
+                <FileText size={16} />
+
+                Reports
+
+              </Link>
+
+              {/* ALERTS */}
+
+              <Link href="/alerts">
+
+                <Bell size={16} />
+
+                Security Alerts
+
+              </Link>
+
+              {/* SETTINGS */}
+
+              <Link href="/settings">
+
+                <Settings size={16} />
+
+                Settings
+
+              </Link>
+
+              {/* LOGOUT */}
 
               <button
                 type="button"
-                onClick={() =>
-                  setShowNotifications(false)
-                }
-                aria-label="Close notifications"
+                onClick={handleLogout}
+                className="logout-button"
               >
 
-                <X size={17} />
+                <LogOut size={16} />
+
+                Logout
 
               </button>
 
             </div>
 
-            {/* NOTIFICATION 1 */}
+          )}
 
-            <div className="notification-item">
-
-              <div className="notification-dot critical"></div>
-
-              <div>
-
-                <strong>
-                  High Risk Alert
-                </strong>
-
-                <p>
-                  Suspicious activity detected in Indore.
-                </p>
-
-                <small>
-                  2 minutes ago
-                </small>
-
-              </div>
-
-            </div>
-
-            {/* NOTIFICATION 2 */}
-
-            <div className="notification-item">
-
-              <div className="notification-dot warning"></div>
-
-              <div>
-
-                <strong>
-                  New Prediction
-                </strong>
-
-                <p>
-                  New cybercrime prediction is available.
-                </p>
-
-                <small>
-                  10 minutes ago
-                </small>
-
-              </div>
-
-            </div>
-
-            {/* VIEW ALL */}
-
-            <Link
-              href="/alerts"
-              className="view-all"
-              onClick={() =>
-                setShowNotifications(false)
-              }
-            >
-              View all alerts →
-            </Link>
-
-          </div>
-
-        )}
+        </div>
 
       </div>
 
-      {/* ==================================
-          PROFILE
-      ================================== */}
-
-      <div className="profile">
-
-        <button
-          type="button"
-          className="profile-button"
-          onClick={() =>
-            setShowProfile(!showProfile)
-          }
-        >
-
-          {/* AVATAR */}
-
-          <div className="avatar">
-
-            <User size={19} />
-
-          </div>
-
-          {/* PROFILE INFORMATION */}
-
-          <div className="profile-info">
-
-            <strong>
-              Rishabh Choudhary
-            </strong>
-
-            <small>
-              Investigator
-            </small>
-
-          </div>
-
-          {/* ARROW */}
-
-          <ChevronDown
-            size={17}
-            className={
-              showProfile
-                ? "rotate-arrow"
-                : ""
-            }
-          />
-
-        </button>
-
-        {/* PROFILE DROPDOWN */}
-
-        {showProfile && (
-
-          <div className="profile-dropdown">
-
-            {/* PROFILE USER */}
-
-            <div className="profile-dropdown-user">
-
-              <div className="avatar">
-
-                <User size={19} />
-
-              </div>
-
-              <div>
-
-                <strong>
-                  Rishabh Choudhary
-                </strong>
-
-                <small>
-                  Investigator
-                </small>
-
-              </div>
-
-            </div>
-
-            {/* REPORTS */}
-
-            <Link href="/reports">
-
-              <FileText size={16} />
-
-              Reports
-
-            </Link>
-
-            {/* SECURITY ALERTS */}
-
-            <Link href="/alerts">
-
-              <Bell size={16} />
-
-              Security Alerts
-
-            </Link>
-
-            {/* SETTINGS */}
-
-            <Link href="/settings">
-
-              <Settings size={16} />
-
-              Settings
-
-            </Link>
-
-          </div>
-
-        )}
-
-      </div>
-
-    </div>
-
-  </header>
-</>
-); }
+    </header>
+  );
+}

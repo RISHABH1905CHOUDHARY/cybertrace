@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Header from "../components/header";
 import Sidebar from "../components/sidebar";
 import StatCards from "../components/statcards";
@@ -11,6 +15,14 @@ import Footer from "../components/footer";
 
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+  const loggedIn = localStorage.getItem("loggedIn");
+
+  if (!loggedIn) {
+    router.push("/login");
+  }
+}, [router]);
   return (
     <div className="app">
 
