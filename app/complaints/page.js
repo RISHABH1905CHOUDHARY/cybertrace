@@ -219,247 +219,295 @@ export default function ComplaintsPage() {
       </section>
 
       {/* STATISTICS */}
-      <section className="complaint-stats">
+{/* STATISTICS */}
+<section className="complaint-stats">
 
-        <div className="complaint-stat-card">
-          <div className="complaint-stat-icon total">
-            <MessageSquareWarning size={21} />
+  {/* TOTAL */}
+  <div
+    className={`complaint-stat-card ${
+      statusFilter === "All" ? "active" : ""
+    }`}
+    role="button"
+    tabIndex={0}
+    onClick={() => handleStatusCardClick("All")}
+    onKeyDown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        handleStatusCardClick("All");
+      }
+    }}
+  >
+    <div className="complaint-stat-icon total">
+      <MessageSquareWarning size={21} />
+    </div>
+
+    <div>
+      <span>Total Complaints</span>
+      <strong>{totalComplaints}</strong>
+      <small>All reported cases</small>
+    </div>
+  </div>
+
+
+  {/* OPEN */}
+  <div
+    className={`complaint-stat-card ${
+      statusFilter === "Open" ? "active" : ""
+    }`}
+    role="button"
+    tabIndex={0}
+    onClick={() => handleStatusCardClick("Open")}
+    onKeyDown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        handleStatusCardClick("Open");
+      }
+    }}
+  >
+    <div className="complaint-stat-icon open">
+      <AlertTriangle size={21} />
+    </div>
+
+    <div>
+      <span>Open</span>
+      <strong>{openComplaints}</strong>
+      <small>Awaiting action</small>
+    </div>
+  </div>
+
+
+  {/* UNDER INVESTIGATION */}
+  <div
+    className={`complaint-stat-card ${
+      statusFilter === "Under Investigation" ? "active" : ""
+    }`}
+    role="button"
+    tabIndex={0}
+    onClick={() =>
+      handleStatusCardClick("Under Investigation")
+    }
+    onKeyDown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        handleStatusCardClick("Under Investigation");
+      }
+    }}
+  >
+    <div className="complaint-stat-icon investigation">
+      <Users size={21} />
+    </div>
+
+    <div>
+      <span>Under Investigation</span>
+      <strong>{investigatingComplaints}</strong>
+      <small>Currently being reviewed</small>
+    </div>
+  </div>
+
+
+  {/* RESOLVED */}
+  <div
+    className={`complaint-stat-card ${
+      statusFilter === "Resolved" ? "active" : ""
+    }`}
+    role="button"
+    tabIndex={0}
+    onClick={() => handleStatusCardClick("Resolved")}
+    onKeyDown={(event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        handleStatusCardClick("Resolved");
+      }
+    }}
+  >
+    <div className="complaint-stat-icon resolved">
+      <CheckCircle2 size={21} />
+    </div>
+
+    <div>
+      <span>Resolved</span>
+      <strong>{resolvedComplaints}</strong>
+      <small>Successfully closed</small>
+    </div>
+  </div>
+
+</section>
+
+{/* MAIN PANEL */}
+<section className="complaints-panel">
+
+  {/* TOOLBAR */}
+  <div className="complaints-toolbar">
+
+    <div className="complaint-search">
+      <Search size={17} />
+
+      <input
+        type="text"
+        placeholder="Search complaint, ID, person or location..."
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+      />
+    </div>
+
+    <div className="complaint-filter">
+      <Filter size={16} />
+
+      <select
+        value={statusFilter}
+        onChange={(event) => setStatusFilter(event.target.value)}
+      >
+        <option value="All">All Status</option>
+        <option value="Open">Open</option>
+        <option value="Under Investigation">
+          Under Investigation
+        </option>
+        <option value="Resolved">Resolved</option>
+      </select>
+    </div>
+
+    <div className="complaint-filter">
+      <select
+        value={categoryFilter}
+        onChange={(event) => setCategoryFilter(event.target.value)}
+      >
+        <option value="All">All Categories</option>
+        <option value="Financial Fraud">Financial Fraud</option>
+        <option value="Online Scam">Online Scam</option>
+        <option value="Phishing">Phishing</option>
+        <option value="Identity Theft">Identity Theft</option>
+        <option value="Online Fraud">Online Fraud</option>
+      </select>
+    </div>
+
+  </div>
+
+
+  {/* LIST HEADER */}
+  <div className="complaints-list-header">
+
+    <div>
+      <h2>Recent Complaints</h2>
+
+      <span>
+        Showing {filteredComplaints.length} complaints
+      </span>
+    </div>
+
+    <div className="complaints-live">
+      <span>Complaint system active</span>
+    </div>
+
+  </div>
+
+
+  {/* COMPLAINT LIST */}
+  <div className="complaints-list">
+
+    {filteredComplaints.length === 0 ? (
+
+      <div className="no-complaints">
+        <CheckCircle2 size={42} />
+        <h3>No complaints found</h3>
+        <p>Try changing your search or filter.</p>
+      </div>
+
+    ) : (
+
+      filteredComplaints.map((complaint) => (
+
+        <article
+          className="complaint-row"
+          key={complaint.id}
+        >
+
+          <div
+            className={`complaint-priority ${complaint.priority.toLowerCase()}`}
+          ></div>
+
+          <div className="complaint-main-icon">
+            <MessageSquareWarning size={20} />
           </div>
 
-          <div>
-            <span>Total Complaints</span>
-            <strong>{totalComplaints}</strong>
-            <small>All reported cases</small>
-          </div>
-        </div>
+          <div className="complaint-content">
 
-        <div className="complaint-stat-card">
-          <div className="complaint-stat-icon open">
-            <AlertTriangle size={21} />
-          </div>
+            <div className="complaint-title-row">
 
-          <div>
-            <span>Open</span>
-            <strong>{openComplaints}</strong>
-            <small>Awaiting action</small>
-          </div>
-        </div>
+              <h3>{complaint.title}</h3>
 
-        <div className="complaint-stat-card">
-          <div className="complaint-stat-icon investigation">
-            <Users size={21} />
-          </div>
+              <span
+                className={`complaint-priority-badge ${complaint.priority.toLowerCase()}`}
+              >
+                {complaint.priority}
+              </span>
 
-          <div>
-            <span>Under Investigation</span>
-            <strong>{investigatingComplaints}</strong>
-            <small>Currently being reviewed</small>
-          </div>
-        </div>
-
-        <div className="complaint-stat-card">
-          <div className="complaint-stat-icon resolved">
-            <CheckCircle2 size={21} />
-          </div>
-
-          <div>
-            <span>Resolved</span>
-            <strong>{resolvedComplaints}</strong>
-            <small>Successfully closed</small>
-          </div>
-        </div>
-
-      </section>
-
-      {/* MAIN PANEL */}
-      <section className="complaints-panel">
-
-        {/* TOOLBAR */}
-        <div className="complaints-toolbar">
-
-          <div className="complaint-search">
-            <Search size={17} />
-
-            <input
-              type="text"
-              placeholder="Search complaint, ID, person or location..."
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </div>
-
-          <div className="complaint-filter">
-            <Filter size={16} />
-
-            <select
-              value={statusFilter}
-              onChange={(event) => setStatusFilter(event.target.value)}
-            >
-              <option value="All">All Status</option>
-              <option value="Open">Open</option>
-              <option value="Under Investigation">
-                Under Investigation
-              </option>
-              <option value="Resolved">Resolved</option>
-            </select>
-          </div>
-
-          <div className="complaint-filter">
-
-            <select
-              value={categoryFilter}
-              onChange={(event) => setCategoryFilter(event.target.value)}
-            >
-              <option value="All">All Categories</option>
-              <option value="Financial Fraud">
-                Financial Fraud
-              </option>
-              <option value="Online Scam">
-                Online Scam
-              </option>
-              <option value="Phishing">
-                Phishing
-              </option>
-              <option value="Identity Theft">
-                Identity Theft
-              </option>
-              <option value="Online Fraud">
-                Online Fraud
-              </option>
-            </select>
-
-          </div>
-
-        </div>
-
-        {/* LIST HEADER */}
-        <div className="complaints-list-header">
-
-          <div>
-            <h2>Recent Complaints</h2>
-            <span>
-              Showing {filteredComplaints.length} complaints
-            </span>
-          </div>
-
-          <div className="complaints-live">
-            <span>Complaint system active</span>
-            
-          </div>
-
-        </div>
-
-        {/* COMPLAINT LIST */}
-        <div className="complaints-list">
-
-          {filteredComplaints.length === 0 ? (
-
-            <div className="no-complaints">
-              <CheckCircle2 size={42} />
-              <h3>No complaints found</h3>
-              <p>Try changing your search or filter.</p>
             </div>
 
-          ) : (
+            <p>{complaint.description}</p>
 
-            filteredComplaints.map((complaint) => (
+            <div className="complaint-meta">
 
-              <article
-                className="complaint-row"
-                key={complaint.id}
+              <span>{complaint.id}</span>
+
+              <span>
+                <MapPin size={13} />
+                {complaint.location}
+              </span>
+
+              <span>
+                <UserRound size={13} />
+                {complaint.complainant}
+              </span>
+
+              <span>
+                <Clock3 size={13} />
+                {complaint.time}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* ACTIONS */}
+          <div className="complaint-actions">
+
+            <span
+              className={`complaint-status ${complaint.status
+                .toLowerCase()
+                .replaceAll(" ", "-")}`}
+            >
+              {complaint.status}
+            </span>
+
+            <button
+              type="button"
+              className="complaint-view-btn"
+              onClick={() => setSelectedComplaint(complaint)}
+            >
+              View
+            </button>
+
+            {complaint.status !== "Resolved" && (
+
+              <button
+                type="button"
+                className="complaint-resolve-btn"
+                onClick={() => resolveComplaint(complaint.id)}
               >
+                <CheckCircle2 size={14} />
+                Resolve
+              </button>
 
-                <div
-                  className={`complaint-priority ${complaint.priority.toLowerCase()}`}
-                ></div>
+            )}
 
-                <div className="complaint-main-icon">
-                  <MessageSquareWarning size={20} />
-                </div>
+          </div>
 
-                <div className="complaint-content">
+        </article>
 
-                  <div className="complaint-title-row">
+      ))
 
-                    <h3>{complaint.title}</h3>
+    )}
 
-                    <span
-                      className={`complaint-priority-badge ${complaint.priority.toLowerCase()}`}
-                    >
-                      {complaint.priority}
-                    </span>
+  </div>
 
-                  </div>
-
-                  <p>{complaint.description}</p>
-
-                  <div className="complaint-meta">
-
-                    <span>{complaint.id}</span>
-
-                    <span>
-                      <MapPin size={13} />
-                      {complaint.location}
-                    </span>
-
-                    <span>
-                      <UserRound size={13} />
-                      {complaint.complainant}
-                    </span>
-
-                    <span>
-                      <Clock3 size={13} />
-                      {complaint.time}
-                    </span>
-
-                  </div>
-
-                </div>
-
-                <div className="complaint-actions">
-
-                  <span
-                    className={`complaint-status ${complaint.status
-                      .toLowerCase()
-                      .replaceAll(" ", "-")}`}
-                  >
-                    {complaint.status}
-                  </span>
-
-                  <button
-                    type="button"
-                    className="complaint-view-btn"
-                    onClick={() =>
-                      setSelectedComplaint(complaint)
-                    }
-                  >
-                    View
-                  </button>
-
-                  {complaint.status !== "Resolved" && (
-                    <button
-                      type="button"
-                      className="complaint-resolve-btn"
-                      onClick={() =>
-                        resolveComplaint(complaint.id)
-                      }
-                    >
-                      <CheckCircle2 size={14} />
-                      Resolve
-                    </button>
-                  )}
-
-                </div>
-
-              </article>
-
-            ))
-
-          )}
-
-        </div>
-
-      </section>
+</section>
 
       {/* DETAILS MODAL */}
       {selectedComplaint && (

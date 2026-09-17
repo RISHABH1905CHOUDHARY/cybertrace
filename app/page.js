@@ -3,7 +3,7 @@ import Sidebar from "../components/sidebar";
 import StatCards from "../components/statcards";
 import RiskHeatmap from "../components/riskHeatmap";
 import RecentAlerts from "../components/recentAlerts";
-import RecentActivities from "../components/recentActivities";
+
 import ComplaintsTrend from "../components/complaintsTrend";
 import FraudTypes from "../components/fraudTypes";
 import PredictionPerformance from "../components/predictionperformance";
@@ -80,7 +80,7 @@ export default function Home() {
 
             <RecentAlerts />
 
-            <RecentActivities />
+      
 
           </div>
 

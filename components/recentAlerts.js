@@ -1,49 +1,15 @@
-const alerts = [
+"use client";
 
-  {
-    level: "CRITICAL",
-    place: "Vijay Nagar, Indore",
-    message: "High withdrawal risk detected",
-    time: "2 min ago",
-    type: "critical"
-  },
-
-  {
-    level: "HIGH",
-    place: "Palasia, Indore",
-    message: "Unusual transaction pattern",
-    time: "18 min ago",
-    type: "high"
-  },
-
-  {
-    level: "HIGH",
-    place: "MG Road, Indore",
-    message: "Multiple linked accounts",
-    time: "42 min ago",
-    type: "high"
-  },
-
-  {
-    level: "MEDIUM",
-    place: "Civil Lines, Bhopal",
-    message: "Potential cash-out activity",
-    time: "1 hr ago",
-    type: "medium"
-  },
-
-  {
-    level: "MEDIUM",
-    place: "Hazratganj, Lucknow",
-    message: "Suspicious ATM activity",
-    time: "2 hr ago",
-    type: "medium"
-  }
-
-];
-
-
+import { useState } from "react";
+import { initialAlerts } from "../app/data/Alert";
+ 
 export default function RecentAlerts() {
+
+  const [showAllAlerts, setShowAllAlerts] = useState(false);
+
+  const visibleAlerts = showAllAlerts
+    ? initialAlerts
+    : initialAlerts.slice(0, 5);
 
   return (
 
@@ -55,57 +21,50 @@ export default function RecentAlerts() {
           ◈ Recent Alerts
         </h2>
 
-        <button>
-          View All
-        </button>
+       <button className="view_all"
+  onClick={() => setShowAllAlerts(!showAllAlerts)}
+>
+  {showAllAlerts ? "Show Less" : "View All"}
+</button>
 
       </div>
 
 
       <div className="alerts-list">
+{visibleAlerts.map((alert) => (
+  <div
+    className="alert-item"
+    key={alert.id}
+  >
+    <div
+      className={`alert-dot ${alert.severity.toLowerCase()}`}
+    />
 
-        {alerts.map((alert) => (
+    <div className="alert-content">
 
-          <div
-            className="alert-item"
-            key={alert.place + alert.message}
-          >
+      <div>
+        <span
+          className={`severity ${alert.severity.toLowerCase()}`}
+        >
+          {alert.severity}
+        </span>
 
-            <div
-              className={`alert-dot ${alert.type}`}
-            />
+        <strong>
+          {alert.location}
+        </strong>
+      </div>
 
+      <p>
+        {alert.description}
+      </p>
 
-            <div className="alert-content">
+      <span className="alert-time">
+        {alert.time}
+      </span>
 
-              <div>
-
-                <span
-                  className={`severity ${alert.type}`}
-                >
-                  {alert.level}
-                </span>
-
-                <strong>
-                  {alert.place}
-                </strong>
-
-              </div>
-
-              <p>
-                {alert.message}
-              </p>
-
-            </div>
-
-
-            <small>
-              {alert.time}
-            </small>
-
-          </div>
-
-        ))}
+    </div>
+  </div>
+))}
 
       </div>
 

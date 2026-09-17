@@ -22,6 +22,9 @@ export default function ComplaintsTrend() {
   const [period, setPeriod] =
     useState("Last 7 Days");
 
+    const handleStatusCardClick = (status) => {
+  setStatusFilter(status);
+};
 
   const points = values
     .map((value, index) => {

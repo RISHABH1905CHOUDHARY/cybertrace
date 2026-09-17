@@ -88,6 +88,18 @@ export default function AlertsPage() {
     );
   };
 
+  // Cards drive the SAME severity/status state as the dropdowns,
+  // so clicking a card and picking a dropdown option never fight each other.
+  const handleSeverityCardClick = (value) => {
+    setSeverity((current) => (current === value ? "All" : value));
+    setStatus("All");
+  };
+
+  const handleStatusCardClick = (value) => {
+    setStatus((current) => (current === value ? "All" : value));
+    setSeverity("All");
+  };
+
   const filteredAlerts = alerts.filter((alert) => {
     const matchesSearch =
       alert.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -148,7 +160,18 @@ export default function AlertsPage() {
       {/* Statistics */}
       <section className="alert-stats">
 
-        <div className="alert-stat-card critical-card">
+        <div
+          role="button"
+          tabIndex={0}
+          className={`alert-stat-card critical-card ${
+            severity === "Critical" ? "active-card" : ""
+          }`}
+          onClick={() => handleSeverityCardClick("Critical")}
+          onKeyDown={(e) =>
+            (e.key === "Enter" || e.key === " ") &&
+            handleSeverityCardClick("Critical")
+          }
+        >
           <div className="stat-icon critical-icon">
             <AlertTriangle size={22} />
           </div>
@@ -159,7 +182,18 @@ export default function AlertsPage() {
           </div>
         </div>
 
-        <div className="alert-stat-card high-card">
+        <div
+          role="button"
+          tabIndex={0}
+          className={`alert-stat-card high-card ${
+            severity === "High" ? "active-card" : ""
+          }`}
+          onClick={() => handleSeverityCardClick("High")}
+          onKeyDown={(e) =>
+            (e.key === "Enter" || e.key === " ") &&
+            handleSeverityCardClick("High")
+          }
+        >
           <div className="stat-icon high-icon">
             <ShieldAlert size={22} />
           </div>
@@ -170,7 +204,18 @@ export default function AlertsPage() {
           </div>
         </div>
 
-        <div className="alert-stat-card open-card">
+        <div
+          role="button"
+          tabIndex={0}
+          className={`alert-stat-card open-card ${
+            status === "Open" ? "active-card" : ""
+          }`}
+          onClick={() => handleStatusCardClick("Open")}
+          onKeyDown={(e) =>
+            (e.key === "Enter" || e.key === " ") &&
+            handleStatusCardClick("Open")
+          }
+        >
           <div className="stat-icon open-icon">
             <Activity size={22} />
           </div>
@@ -181,7 +226,18 @@ export default function AlertsPage() {
           </div>
         </div>
 
-        <div className="alert-stat-card resolved-card">
+        <div
+          role="button"
+          tabIndex={0}
+          className={`alert-stat-card resolved-card ${
+            status === "Resolved" ? "active-card" : ""
+          }`}
+          onClick={() => handleStatusCardClick("Resolved")}
+          onKeyDown={(e) =>
+            (e.key === "Enter" || e.key === " ") &&
+            handleStatusCardClick("Resolved")
+          }
+        >
           <div className="stat-icon resolved-icon">
             <ShieldCheck size={22} />
           </div>
@@ -251,7 +307,7 @@ export default function AlertsPage() {
             </div>
 
             <div className="security-status">
-              <span> Security engine active </span>
+              <span>  </span>
             </div>
           </div>
 
