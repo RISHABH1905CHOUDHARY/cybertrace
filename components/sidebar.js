@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter , usePathname  } from "next/navigation";
+
 import Link from "next/link";
 
 import {
@@ -53,6 +54,7 @@ const menuItems = [
 
 export default function Sidebar() {
   const router = useRouter();
+  const pathname = usePathname();
   return (
     <aside className="sidebar">
 
@@ -70,20 +72,22 @@ export default function Sidebar() {
 
           return (
             <Link
-              key={item.label}
-              href={item.href}
-              className="sidebar-item"
-            >
-              <Icon size={20} />
-              <span>{item.label}</span>
-            </Link>
+  key={item.label}
+  href={item.href}
+  className={`sidebar-item ${
+  pathname === item.href ? "active" : ""
+}`}
+>
+  <Icon size={20} />
+  <span>{item.label}</span>
+</Link>
           );
         })}
 
         {/* Simulate Fraud */}
        <button
   type="button"
-  className="sidebar-item active"
+  className="sidebar-item "
  onClick={() => {
   router.push("/SimulateFraud");
 }}
