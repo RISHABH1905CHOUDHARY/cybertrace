@@ -1,4 +1,6 @@
 "use client";
+
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -45,10 +47,12 @@ const menuItems = [
     icon: FileBarChart,
     href: "/reports",
   },
+ 
   
 ];
 
 export default function Sidebar() {
+  const router = useRouter();
   return (
     <aside className="sidebar">
 
@@ -77,18 +81,16 @@ export default function Sidebar() {
         })}
 
         {/* Simulate Fraud */}
-        <button
-          type="button"
-          className="sidebar-item active"
-          onClick={() => {
-            window.dispatchEvent(
-              new CustomEvent("simulate-fraud")
-            );
-          }}
-        >
-          <Zap size={20} />
-          <span>Simulate Fraud</span>
-        </button>
+       <button
+  type="button"
+  className="sidebar-item active"
+ onClick={() => {
+  router.push("/SimulateFraud");
+}}
+>
+  <Zap size={20} />
+  <span>Simulate Fraud</span>
+</button>
 
       </nav>
 
@@ -96,20 +98,26 @@ export default function Sidebar() {
       <div className="sidebar-bottom">
 
         <button
-          type="button"
-          className="sidebar-item"
-        >
-          <Users size={20} />
-          <span>Users</span>
-        </button>
+  type="button"
+  className="sidebar-item"
+  onClick={() => {
+    router.push("/User");
+  }}
+>
+  <Users size={20} />
+  <span>Users</span>
+</button>
 
-        <button
-          type="button"
-          className="sidebar-item"
-        >
-          <Info size={20} />
-          <span>About Digital Future</span>
-        </button>
+       <button
+  type="button"
+  className="sidebar-item"
+  onClick={() => {
+    router.push("/AboutDigitalFuture");
+  }}
+>
+  <Info size={20} />
+  <span>About Digital Future</span>
+</button>
 
       </div>
 

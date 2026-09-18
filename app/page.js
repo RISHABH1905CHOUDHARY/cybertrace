@@ -30,7 +30,7 @@ export default function Home() {
 
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content dashboard-main">
 
         {/* Welcome Section */}
         <section className="welcome-section">
