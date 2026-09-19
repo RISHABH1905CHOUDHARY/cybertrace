@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: crimetrace_postgis
+    environment:
+      POSTGRES_USER: crimetrace
+      POSTGRES_PASSWORD: crimetrace_secret
+      POSTGRES_DB: crimetrace_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crimetrace -d crimetrace_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crimetrace_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://crimetrace:crimetrace_secret@db:5432/crimetrace_db
+      - SYNC_DATABASE_URL=postgresql+psycopg2://crimetrace:crimetrace_secret@db:5432/crimetrace_db
+      - USE_POSTGIS=true
+      - SECRET_KEY=crimetrace-super-secret-jwt-signing-key-production
+      - DEBUG=True
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/backend
+
+volumes:
+  postgis_data:
